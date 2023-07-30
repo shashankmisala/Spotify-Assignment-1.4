@@ -24,6 +24,7 @@ tracks = handle_outliers_zscore(tracks)
 scaler = MinMaxScaler()
 data_scaled = scaler.fit_transform(df[['danceability','energy','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence']])
 
+
 #KMeans Clustering
 kmeans = KMeans(n_clusters=2, random_state=42
 kmeans.fit(data_scaled)
