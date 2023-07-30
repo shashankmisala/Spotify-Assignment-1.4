@@ -8,7 +8,7 @@ from sklearn.cluster import DBSCAN
 df = pd.read_csv('spotify_tracks.csv')
 
 # Select the relevant features for clustering
-df = df[['artists','album_name','track_name']]
+df = df[['danceability','energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','artists','album_name','track_name']]
 
 # Preprocess the data
 scaler = StandardScaler()
@@ -23,18 +23,6 @@ dbscan_model.fit(X_scaled)
 clusters = dbscan_model.labels_
 
 # Function to recommend songs
-def recommend_songs(user_preferences):
-    # Preprocess user data
-    user = scaler.transform([user_preferences])
-
-    # Get the cluster label for the user's preferences
-    user_cluster = dbscan_model.labels_[-1]
-
-    # Filter dataset to get recommendations from the same cluster
-    recommended_songs = df[clusters == user_cluster][['danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness',
-                                                      'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo']]
-
-    return recommended_songs
     
 # Main Streamlit app
 def main():
@@ -53,19 +41,23 @@ def main():
     valence = st.slider('Valence', 0, 100, 25,10)
     tempo = st.slider('Tempo', 0, 100, 25,10)
 
-    user_preferences = [danceability, energy, key, loudness, mode, speechiness, acousticness, instrumentalness, liveness, valence, tempo]
-#predicting recommendations
     if st.button('Get Recommendations'):
-        recommended_songs = recommend_songs(user_preferences)
+    # Preprocess user data
+      user = scaler.transform([[danceability, energy, key, loudness, mode, speechiness,acousticness, instrumentalness, liveness, valence, tempo]])
 
-        st.subheader('Recommended Songs')
-        st.write(recommended_songs)
-        
+    # Predict the user's cluster using DBSCAN
+      user_cluster = dbscan_model.fit_predict(user)
+
+    # Filter dataset to get recommendations from the same cluster
+      recommended_songs = df[clusters == user_cluster[0]][['artists','album_name']]
+
+      st.subheader('Recommended Songs')
+      st.write(recommended_songs)
     #User Interaction to choose their favourite songs
-        st.subheader('Select your favorite songs from the recommendations:')
-        selected_songs = st.multiselect('Favorite Songs', recommended_songs.index)
+      st.subheader('Select your favorite songs from the recommendations:')
+      selected_songs = st.multiselect('Favorite Songs', recommended_songs.index)
     #User Feedback
-        if st.button('Submit Feedback'):
+      if st.button('Submit Feedback'):
             if len(selected_songs) > 0:
                 st.success('Thanks for providing feedback on your favorite songs!')
             else:
