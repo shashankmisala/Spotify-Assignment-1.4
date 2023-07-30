@@ -8,7 +8,7 @@ from sklearn.cluster import DBSCAN
 df = pd.read_csv('spotify_tracks.csv')
 
 # Select the relevant features for clustering
-df = df[['danceability','energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','artists','album_name','track_name']]
+df = df[['artists','album_name','track_name']]
 
 # Preprocess the data
 scaler = StandardScaler()
