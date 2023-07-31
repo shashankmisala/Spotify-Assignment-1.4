@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.cluster import KMeans
 import streamlit as st
+from scipy import stats
 
 #Loading the dataset
 df = pd.read_csv('spotify_tracks.csv')
@@ -17,7 +18,7 @@ df.dropna(inplace=True)
 def handle_outliers_zscore(data, threshold=3):
     z_scores = stats.zscore(data)
     return data[(z_scores > -threshold) & (z_scores < threshold)]
-tracks = tracks_df[["danceability", "energy", "loudness","mode", "speechiness", "acousticness","instrumentalness","liveness","valence"]]
+tracks = df[["danceability", "energy", "loudness","mode", "speechiness", "acousticness","instrumentalness","liveness","valence"]]
 tracks = handle_outliers_zscore(tracks)
 
 #Scaling the dataset
