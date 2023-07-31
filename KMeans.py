@@ -27,7 +27,7 @@ data_scaled = scaler.fit_transform(df[['danceability','energy','loudness','mode'
 
 
 #KMeans Clustering
-kmeans = KMeans(n_clusters=2, random_state=42)
+kmeans = KMeans(n_clusters=8, random_state=42)
 kmeans.fit(data_scaled)
 
 #Making a user-friendly website
