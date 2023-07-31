@@ -60,6 +60,16 @@ def main():
         st.subheader('Recommended Songs:')
         st.write(recommended_songs)
 
+    #User Interaction to choose their favourite songs
+        st.subheader('Select your favorite songs from the recommendations:')
+        selected_songs = st.multiselect('Favorite Songs', recommended_songs.index)
+    #User Feedback
+        if st.button('Submit Feedback'):
+            if len(selected_songs) > 0:
+                st.success('Thanks for providing feedback on your favorite songs!')
+            else:
+                st.warning('Please select at least one favorite song before submitting.')
+
 if __name__ == '__main__':
     main()
 
